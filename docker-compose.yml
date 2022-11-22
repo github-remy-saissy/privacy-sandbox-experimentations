@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  fledge:
+    image: nginx:alpine
+    volumes:
+      - ./conf/nginx.d:/etc/nginx/conf.d
+      - ./certs:/etc/ssl/fledge
+      - ./www:/usr/share/nginx/html
+    ports:
+      - "443:443"
