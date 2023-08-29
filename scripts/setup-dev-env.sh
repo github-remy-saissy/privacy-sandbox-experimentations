@@ -30,6 +30,21 @@ echo "Local DNS MacOS resolver successfully installed."
 
 echo "Installing local Nginx reverse proxy to serve local SSL domains..."
 brew install nginx
+# Configure a minimal nginx root configuration.
+cat <<EOF > $(brew --prefix)/etc/nginx.conf
+worker_processes  1;
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+    include servers/*;
+}
+EOF
 mkdir -pv $(brew --prefix)/etc/
 for domain in home adtech ssp dsp publisher advertiser; do
   echo "Installing domain ${domain}.localhost in $(brew --prefix)/etc/nginx/servers/..."
