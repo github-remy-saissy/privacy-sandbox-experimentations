@@ -33,7 +33,7 @@ brew install nginx
 mkdir -pv $(brew --prefix)/etc/
 for domain in home adtech ssp dsp publisher advertiser; do
   echo "Installing domain ${domain}.localhost in $(brew --prefix)/etc/nginx/servers/..."
-  cp ../dev-nginx.d/${domain}.localhost $(brew --prefix)/etc/nginx/servers/
+  cp ./dev-nginx.d/${domain}.localhost $(brew --prefix)/etc/nginx/servers/
 done
 brew services stop nginx
 brew services start nginx

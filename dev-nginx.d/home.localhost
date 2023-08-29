@@ -5,8 +5,8 @@ server {
     ssl_certificate     /usr/local/etc/ssl/privacy-sandbox/home.localhost.pem;
     ssl_certificate_key /usr/local/etc/ssl/privacy-sandbox/home.localhost-key.pem;
 
-    access_log          /usr/local/var/log/nginx/ssp.access.log;
-    error_log           /usr/local/var/log/nginx/ssp.error.log;
+    access_log          /usr/local/var/log/nginx/home.access.log;
+    error_log           /usr/local/var/log/nginx/home.error.log;
 
     location / {
       proxy_set_header        Host $host;
