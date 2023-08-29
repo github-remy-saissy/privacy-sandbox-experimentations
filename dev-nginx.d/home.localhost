@@ -1,0 +1,20 @@
+server {
+    listen              443 ssl;
+    server_name         home.localhost;
+
+    ssl_certificate     /usr/local/etc/ssl/privacy-sandbox/home.localhost.pem;
+    ssl_certificate_key /usr/local/etc/ssl/privacy-sandbox/home.localhost-key.pem;
+
+    access_log          /usr/local/var/log/nginx/ssp.access.log;
+    error_log           /usr/local/var/log/nginx/ssp.error.log;
+
+    location / {
+      proxy_set_header        Host $host;
+      proxy_set_header        X-Real-IP $remote_addr;
+      proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header        X-Forwarded-Proto $scheme;
+
+      proxy_pass          http://127.0.0.1:3000;
+      proxy_read_timeout  90;
+    }
+}

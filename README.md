@@ -6,68 +6,27 @@ This demo shows the simple usage of the [Protected Audience API](https://develop
 
 ## Local development
 
-### Setup HTTPS
+### Setup environment
 
-To run the Protected Audience demo locally, the resources from DSP/SSP must be served over HTTPS. Unfortunately, Firebase emulator [does not support HTTPS localhost](https://github.com/firebase/firebase-tools/issues/1908). Therefore, we will setup a reverse proxy with `nginx` to serve DSP/SSP resources over HTTPS.
+To run locally, the resources from DSP/SSP must be served over HTTPS. Unfortunately, Firebase emulator [does not support HTTPS localhost](https://github.com/firebase/firebase-tools/issues/1908). Therefore, we will setup a reverse proxy with `nginx` to serve DSP/SSP resources over HTTPS.
+1. Install Homebrew
+2. Run `scripts/setup-dev-env.sh`
 
-#### Generate the certs with [`mkcert`]()
+The script will do the following:
+1. Deploy SSL certificates for each domain of the project in `$(brew --prefix)/etc/ssl/privacy-sandbox`
+2. Install dnsmasq and uses the MacOS dynamic resolver to register the *.localhost domain to respond on 127.0.0.1
+3. Install a local nginx configured to serve as an HTTPS reverse proxy using configurations from `./dev-nginx.d`
 
-1. Install `mkcert` by following the [instructions for your operating system](https://github.com/FiloSottile/mkcert#installation).
-1. Run `mkcert -install`.
-1. Create a folder to store the certificates in. In this example, we will use `mkdir ~/certs`.
-1. Navigate to the certificate folder: `cd ~/certs`.
-1. Run `mkcert localhost`.
+### Clean the environment
 
-> For an in-depth explanation of this section, please see the ["How to use HTTPS for local development"](https://web.dev/how-to-use-local-https/) article.
+To remove SSL certificates and custom nginx reverse proxy configuration when no longer needed:
+1. Run `scripts/cleanup-dev-env.sh`
 
-#### Setup reverse proxy with [nginx](https://www.nginx.com/)
+The script will do the following:
+1. Removes SSL certificates for each domain of the project in `$(brew --prefix)/etc/ssl/privacy-sandbox`
+3. Removes local nginx reverse proxy configurations from `./dev-nginx.d`
 
-1. Install `nginx` ([Mac](https://www.google.com/search?q=install+nginx+mac), [Linux](https://www.google.com/search?q=install+nginx+linux), [Windows](https://www.google.com/search?q=install+nginx+windows)).
-1. Find the `nginx` configuration file location based on your operating system (If you used `homebrew` on Mac, it is under `/Users/[USER-NAME]/homebrew/etc/nginx/nginx.conf`).
-1. If you don't have an existing configurations set up in `nginx`, erase the existing content in `nginx.conf` and copy-paste the following block into the config. Replace `[USER-NAME]` with the path that your certificate is stored in:
-
-```nginx
-http {
-  # DSP proxy
-  server {
-    listen  4437 ssl;
-    ssl_certificate  /Users/[USER-NAME]/certs/localhost.pem;
-    ssl_certificate_key /Users/[USER-NAME]/certs/localhost-key.pem;
-
-    location / {
-      proxy_set_header        Host $host;
-      proxy_set_header        X-Real-IP $remote_addr;
-      proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header        X-Forwarded-Proto $scheme;
-
-      proxy_pass          http://localhost:3007/;
-      proxy_read_timeout  90;
-    }
-  }
-
-  # SSP proxy
-  server {
-    listen  4438 ssl;
-    ssl_certificate  /Users/[USER-NAME]/certs/localhost.pem;
-    ssl_certificate_key /Users/[USER-NAME]/certs/localhost-key.pem;
-
-    location / {
-      proxy_set_header        Host $host;
-      proxy_set_header        X-Real-IP $remote_addr;
-      proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header        X-Forwarded-Proto $scheme;
-
-      proxy_pass          http://localhost:3008;
-      proxy_read_timeout  90;
-    }
-  }
-}
-```
-
-4. Stop the `nginx` server with `nginx -s stop`
-5. Restart the `nginx` server with `nginx`
-
-The above `nginx` configuration proxies `https://localhost:4437` to `http://localhost:3007` (DSP server) and `https://localhost:4438` to `http://localhost:3008` (SSP server).
+Since the *.localhost is a catch-all resolver with no specific configuration linked, it is kept.
 
 ### Setup Firebase
 
@@ -85,13 +44,15 @@ The above `nginx` configuration proxies `https://localhost:4437` to `http://loca
 npm run dev
 ```
 
-And visit `http://localhost:3000` for the main page
+And visit `https://home.localhost` for the main page
 
 ### Deploy code
 
 ```
 npm run deploy
 ```
+
+This will deploy the project in the firebase project referenced in the .firebase.json file.
 
 ## Key files
 
@@ -112,8 +73,9 @@ npm run deploy
 
 ### Local
 
-- Main - http://localhost:3000
-- Advertiser - http://localhost:3005
-- Publisher - http://localhost:3006
-- DSP - https://localhost:4437 (via nginx reverse proxy from 8087 to 4437)
-- SSP - https://localhost:4438 (via nginx reverse proxy from 8088 to 4438)
+- Main - https://home.localhost
+- Adtech - https://adtech.localhost
+- Advertiser - https://advertiser.localhost
+- Publisher - https://publisher.localhost
+- DSP - https://dsp.localhost
+- SSP - https://ssp.localhost
