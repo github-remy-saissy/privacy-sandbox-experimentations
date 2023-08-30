@@ -15,9 +15,10 @@ echo "SSL certificates installed."
 
 echo "Installing local MacOS resolver on .localhost using dnsmasq and resolver..."
 brew install dnsmasq
-mkdir -pv $(brew --prefix)/etc/
-echo "address=/.localhost/127.0.0.1" > $(brew --prefix)/etc/dnsmasq.conf
-echo "port=53" >> $(brew --prefix)/etc/dnsmasq.conf
+cat <<EOF > $(brew --prefix)/etc/dnsmasq.d/localhost
+address=/.localhost/127.0.0.1
+port=53
+EOF
 sudo brew services stop dnsmasq
 sudo brew services start dnsmasq
 sudo mkdir -v /etc/resolver
