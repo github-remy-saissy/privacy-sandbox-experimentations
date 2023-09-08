@@ -15,12 +15,15 @@ echo "SSL certificates installed."
 
 echo "Installing local MacOS resolver on .localhost using dnsmasq and resolver..."
 brew install dnsmasq
-cat <<EOF > $(brew --prefix)/etc/dnsmasq.d/localhost
-address=/.localhost/127.0.0.1
-port=53
-EOF
+echo "listen-address=127.0.0.1" > $(brew --prefix)/etc/dnsmasq.conf
+echo "port=53" >> $(brew --prefix)/etc/dnsmasq.conf
+echo "log-facility=$(brew --prefix)/var/log/dnsmasq.log" >> $(brew --prefix)/etc/dnsmasq.conf
+echo "conf-dir=$(brew --prefix)/etc/dnsmasq.d" >> $(brew --prefix)/etc/dnsmasq.conf
+echo "address=/.localhost/127.0.0.1" > $(brew --prefix)/etc/dnsmasq.d/localhost.conf
 sudo brew services stop dnsmasq
 sudo brew services start dnsmasq
+sudo brew services info dnsmasq
+
 sudo mkdir -v /etc/resolver
 sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/localhost'
 sudo dscacheutil -flushcache
@@ -51,8 +54,8 @@ for domain in home adtech ssp dsp publisher advertiser; do
   echo "Installing domain ${domain}.localhost in $(brew --prefix)/etc/nginx/servers/..."
   cp ./dev-nginx.d/${domain}.localhost $(brew --prefix)/etc/nginx/servers/
 done
-brew services stop nginx
-brew services start nginx
+sudo brew services stop nginx
+sudo brew services start nginx
 echo "Checking that nginx is properly launched."
-brew services
+sudo brew services info nginx
 echo "Nginx reverse proxy is properly installed."

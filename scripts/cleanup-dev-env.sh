@@ -11,8 +11,8 @@ for domain in home adtech ssp dsp publisher advertiser; do
   echo "Removing domain ${domain}.localhost from $(brew --prefix)/etc/nginx/servers/..."
   rm $(brew --prefix)/etc/nginx/servers/${domain}.localhost
 done
-brew services stop nginx
-brew services start nginx
+sudo brew services stop nginx
+sudo brew services start nginx
 echo "Checking that nginx is properly launched."
-brew services
+sudo brew services
 echo "Nginx reverse proxy is running properly."
