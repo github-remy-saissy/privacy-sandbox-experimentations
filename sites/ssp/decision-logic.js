@@ -15,7 +15,58 @@
  */
 
 function scoreAd(adMetadata, bid, auctionConfig, trustedScoringSignals, browserSignals) {
-  console.log(
+    console.log("Methods available in the scoreAd():");
+    let props = [];
+    if (typeof window !== "undefined") {
+        for (prop in window) {
+            props.push(prop);
+        }
+        props.sort();
+        console.log(`Window: ${props.join("(), ")}()`);
+        if (typeof window.sharedStorage !== "undefined") {
+            props = [];
+            for (prop in window.sharedStorage) {
+                props.push(prop);
+            }
+            props.sort();
+            console.log(`window.sharedStorage: ${props.join("(), ")}()`);
+        }
+        if (typeof window.fence !== "undefined") {
+            props = [];
+            for (prop in window.fence) {
+                props.push(prop);
+            }
+            props.sort();
+            console.log(`window.fence: ${props.join("(), ")}()`);
+        }
+    }
+    if (typeof navigator !== "undefined") {
+        props = [];
+        for (prop in navigator) {
+            props.push(prop);
+        }
+        props.sort();
+        console.log(`Navigator: ${props.join("(), ")}()`);
+    }
+    if (typeof document !== "undefined") {
+        props = [];
+        for (prop in document) {
+            props.push(prop);
+        }
+        props.sort();
+        console.log(`Document: ${props.join("(), ")}()`);
+    }
+    if (typeof this !== "undefined") {
+        props = [];
+        for (prop in this) {
+            props.push(prop);
+        }
+        props.sort();
+        console.log(`This: ${props.join("(), ")}()`);
+    }
+
+
+    console.log(
     JSON.stringify({
       adMetadata,
       bid,
@@ -28,6 +79,56 @@ function scoreAd(adMetadata, bid, auctionConfig, trustedScoringSignals, browserS
 }
 
 function reportResult(auctionConfig, browserSignals) {
+    console.log("Methods available in the reportResult():");
+    let props = [];
+    if (typeof window !== "undefined") {
+        for (prop in window) {
+            props.push(prop);
+        }
+        props.sort();
+        console.log(`Window: ${props.join("(), ")}()`);
+        if (typeof window.sharedStorage !== "undefined") {
+            props = [];
+            for (prop in window.sharedStorage) {
+                props.push(prop);
+            }
+            props.sort();
+            console.log(`window.sharedStorage: ${props.join("(), ")}()`);
+        }
+        if (typeof window.fence !== "undefined") {
+            props = [];
+            for (prop in window.fence) {
+                props.push(prop);
+            }
+            props.sort();
+            console.log(`window.fence: ${props.join("(), ")}()`);
+        }
+    }
+    if (typeof navigator !== "undefined") {
+        props = [];
+        for (prop in navigator) {
+            props.push(prop);
+        }
+        props.sort();
+        console.log(`Navigator: ${props.join("(), ")}()`);
+    }
+    if (typeof document !== "undefined") {
+        props = [];
+        for (prop in document) {
+            props.push(prop);
+        }
+        props.sort();
+        console.log(`Document: ${props.join("(), ")}()`);
+    }
+    if (typeof this !== "undefined") {
+        props = [];
+        for (prop in this) {
+            props.push(prop);
+        }
+        props.sort();
+        console.log(`This: ${props.join("(), ")}()`);
+    }
+
   sendReportTo(auctionConfig.seller + '/reporting?report=result');
 
   return {

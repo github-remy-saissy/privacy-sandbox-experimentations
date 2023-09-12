@@ -30,6 +30,56 @@ const joinInterestGroup = async (dspUrl) => {
       },
     ],
   };
-
   navigator.joinAdInterestGroup(interestGroup, ONE_WEEK_IN_SECONDS);
+  console.log("Methods available in the browser:");
+  let props = [];
+  if (typeof window !== "undefined") {
+    for (prop in window) {
+      props.push(prop);
+    }
+    props.sort();
+    console.log(`Window: ${props.join("(), ")}()`);
+    if (typeof window.sharedStorage !== "undefined") {
+      props = [];
+      for (prop in window.sharedStorage) {
+        props.push(prop);
+      }
+      props.sort();
+      console.log(`window.sharedStorage: ${props.join("(), ")}()`);
+    }
+    if (typeof window.fence !== "undefined") {
+      props = [];
+      for (prop in window.fence) {
+        props.push(prop);
+      }
+      props.sort();
+      console.log(`window.fence: ${props.join("(), ")}()`);
+    }
+  }
+  if (typeof navigator !== "undefined") {
+    props = [];
+    for (prop in navigator) {
+      props.push(prop);
+    }
+    props.sort();
+    console.log(`Navigator: ${props.join("(), ")}()`);
+  }
+  if (typeof document !== "undefined") {
+    props = [];
+    for (prop in document) {
+      props.push(prop);
+    }
+    props.sort();
+    console.log(`Document: ${props.join("(), ")}()`);
+  }
+  if (typeof this !== "undefined") {
+    props = [];
+    for (prop in this) {
+      props.push(prop);
+    }
+    props.sort();
+    console.log(`This: ${props.join("(), ")}()`);
+  }
+
+  window.sharedStorage.set('ab-testing-group', '43');
 };
