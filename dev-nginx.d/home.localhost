@@ -1,12 +1,12 @@
 server {
-    listen              443 ssl;
-    server_name         home.localhost;
+    listen                    443 ssl;
+    server_name               home.localhost;
 
-    ssl_certificate     /usr/local/etc/ssl/privacy-sandbox/home.localhost.pem;
-    ssl_certificate_key /usr/local/etc/ssl/privacy-sandbox/home.localhost-key.pem;
+    ssl_certificate           <<PREFIX>>/etc/ssl/<<PROJECT_NAME>>/home.localhost.pem;
+    ssl_certificate_key       <<PREFIX>>/etc/ssl/<<PROJECT_NAME>>/home.localhost-key.pem;
 
-    access_log          /usr/local/var/log/nginx/home.access.log;
-    error_log           /usr/local/var/log/nginx/home.error.log;
+    access_log                <<PREFIX>>/var/log/nginx/home.access.log;
+    error_log                 <<PREFIX>>/var/log/nginx/home.error.log;
 
     location / {
       proxy_set_header        Host $host;
@@ -14,7 +14,7 @@ server {
       proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header        X-Forwarded-Proto $scheme;
 
-      proxy_pass          http://127.0.0.1:3000;
-      proxy_read_timeout  90;
+      proxy_pass              http://127.0.0.1:3000;
+      proxy_read_timeout      90;
     }
 }
